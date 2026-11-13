@@ -9,6 +9,8 @@
 | Programme | B.Tech CSE |
 | Department | Information Technology |
 | University | Manipal University Jaipur |
+| Live demo | https://flickr8k-captioning-jp9tfcuw88xxt5vjxsgykw.streamlit.app/ |
+| Source code | https://github.com/sanskriti25-95/flickr8k-captioning |
 
 ## Summary
 A pretrained CNN turns each image into a 2048-number feature vector. An LSTM language model, conditioned on that vector, generates the caption one word at a time. We compare two encoders (InceptionV3 and ResNet50) and two decoding strategies (greedy and beam search, k=3), and measure both against a retrieval baseline that writes nothing new. The best model is **ResNet50 with beam search**: BLEU-1/2/3/4 = **0.538 / 0.357 / 0.232 / 0.141** on the official Flickr8k test set.
@@ -94,6 +96,8 @@ python cap.py baseline --enc inception
 python cap.py eval     --enc inception
 streamlit run app.py
 ```
+The demo is also deployed on Streamlit Community Cloud at https://flickr8k-captioning-jp9tfcuw88xxt5vjxsgykw.streamlit.app/ (Python 3.12, CPU). Upload a photo, choose the encoder and beam width, and it returns a caption.
+
 The dataset goes in `data/images/Flicker8k_Dataset/` and `data/text/`. Outputs (features, models, vocabularies, training histories, `eval_*.json`, `baseline_*.json`) are written to `outputs/`.
 
 ## References
