@@ -1,6 +1,7 @@
 """Flickr8k image captioning: CNN encoder + LSTM decoder (Keras 3 / TensorFlow).
 
-Subcommands:  features | train | eval | baseline
+Subcommands:  download | features | train | eval | baseline
+  python cap.py download
   python cap.py features --enc inception
   python cap.py train    --enc inception
   python cap.py eval     --enc inception
@@ -95,6 +96,30 @@ def make_pairs(names, caps, vocab, max_len, feat_index):
     for r, s in enumerate(xs):
         X[r, : len(s)] = s
     return np.array(ii, np.int32), X, np.array(ys, np.int32)
+
+
+# ----------------------------------------------------------------------------- download
+RELEASE = "https://github.com/jbrownlee/Datasets/releases/download/Flickr8k/"
+
+
+def cmd_download(a):
+    """Fetch the official Flickr8k release (images + captions + official split files); skip if present."""
+    import urllib.request, zipfile
+    if IMG_DIR.exists() and (TXT_DIR / "Flickr8k.token.txt").exists():
+        print("Flickr8k already present, skipping download."); return
+    for name, dest in [("Flickr8k_Dataset.zip", DATA / "images"), ("Flickr8k_text.zip", TXT_DIR)]:
+        dest.mkdir(parents=True, exist_ok=True)
+        zpath = DATA / name
+        if not zpath.exists():
+            print("downloading", name, "...")
+            try:
+                urllib.request.urlretrieve(RELEASE + name, zpath)
+            except Exception as e:  # offline or link moved
+                sys.exit(f"Download failed ({e}). Get Flickr8k from https://www.kaggle.com/datasets/adityajn105/flickr8k "
+                         f"or {RELEASE}, and place the images in {IMG_DIR} and the text files in {TXT_DIR}.")
+        with zipfile.ZipFile(zpath) as z:
+            z.extractall(dest)
+    print("done:", IMG_DIR)
 
 
 # ----------------------------------------------------------------------------- features
@@ -278,7 +303,7 @@ def cmd_baseline(a):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["features", "train", "eval", "baseline"])
+    ap.add_argument("cmd", choices=["download", "features", "train", "eval", "baseline"])
     ap.add_argument("--enc", default="inception", choices=list(ENCODERS))
     ap.add_argument("--epochs", type=int, default=20)
     ap.add_argument("--batch", type=int, default=256)

@@ -1,0 +1,153 @@
+{
+ "greedy": {
+  "BLEU-1": 0.5063549704947798,
+  "BLEU-2": 0.3133666232886737,
+  "BLEU-3": 0.1882798928478984,
+  "BLEU-4": 0.10810196734512165
+ },
+ "beam3": {
+  "BLEU-1": 0.5257649869184393,
+  "BLEU-2": 0.34266823884740805,
+  "BLEU-3": 0.217248217924004,
+  "BLEU-4": 0.1298872845950161
+ },
+ "samples": [
+  {
+   "image": "3385593926_d3e9c21170.jpg",
+   "greedy": "brown dog is running on the sand",
+   "beam3": "brown dog is running in the snow",
+   "refs": [
+    "the dogs are in the snow in front of fence",
+    "the dogs play on the snow"
+   ]
+  },
+  {
+   "image": "2677656448_6b7e7702af.jpg",
+   "greedy": "two children are playing in pool",
+   "beam3": "two little girls are playing in pool",
+   "refs": [
+    "brown and white dog swimming towards some in the pool",
+    "dog in swimming pool swims toward sombody we cannot see"
+   ]
+  },
+  {
+   "image": "311146855_0b65fdb169.jpg",
+   "greedy": "woman in blue shirt and white shorts is standing in front of crowd",
+   "beam3": "young girl in blue shirt and blue shorts is standing in front of crowd of people",
+   "refs": [
+    "man and woman in festive costumes dancing",
+    "man and woman with feathers on her head dance"
+   ]
+  },
+  {
+   "image": "1258913059_07c613f7ff.jpg",
+   "greedy": "two people sit on bench in front of an empty building",
+   "beam3": "two people are sitting on bench in front of white building",
+   "refs": [
+    "couple of people sit outdoors at table with an umbrella and talk",
+    "three people are sitting at an outside picnic bench with an umbrella"
+   ]
+  },
+  {
+   "image": "241347760_d44c8d3a01.jpg",
+   "greedy": "football player in red and white jersey is being tackled",
+   "beam3": "oklahoma football player in red and white jersey",
+   "refs": [
+    "man is wearing sooners red football shirt and helmet",
+    "oklahoma sooners football player wearing his jersey number"
+   ]
+  },
+  {
+   "image": "2654514044_a70a6e2c21.jpg",
+   "greedy": "the brown dog is running through the grass",
+   "beam3": "the brown dog is running through the grass",
+   "refs": [
+    "brown dog running",
+    "brown dog running over grass"
+   ]
+  },
+  {
+   "image": "2339106348_2df90aa6a9.jpg",
+   "greedy": "woman in black and white jacket is smiling",
+   "beam3": "woman and woman are posing for picture in front of crowd",
+   "refs": [
+    "girl with dark brown hair and eyes in blue scarf is standing next to girl in fur edged coat",
+    "an asian boy and an asian girl are smiling in crowd of people"
+   ]
+  },
+  {
+   "image": "256085101_2c2617c5d0.jpg",
+   "greedy": "brown and white dog is playing with tennis ball in the snow",
+   "beam3": "brown and white dog is playing with tennis ball in the snow",
+   "refs": [
+    "dog with its mouth opened",
+    "brown and white dog yawning"
+   ]
+  },
+  {
+   "image": "280706862_14c30d734a.jpg",
+   "greedy": "black dog is running through the water",
+   "beam3": "the black dog is swimming in the water",
+   "refs": [
+    "black dog emerges from the water onto the sand holding white object in its mouth",
+    "black dog emerges from the water with white ball in its mouth"
+   ]
+  },
+  {
+   "image": "3072172967_630e9c69d0.jpg",
+   "greedy": "the basketball player in the white uniform is challenging the player in the white uniform",
+   "beam3": "two men playing basketball",
+   "refs": [
+    "player from the white and green highschool team dribbles down court defended by player from the other team",
+    "four basketball players in action"
+   ]
+  },
+  {
+   "image": "3482062809_3b694322c4.jpg",
+   "greedy": "man in white shirt and white pants is walking on the sidewalk",
+   "beam3": "two children are playing on cobblestone street",
+   "refs": [
+    "group of tourists stand around as lady puts her hand near the mouth of statue",
+    "woman is making statue pretend to kiss her hand beside four boys at bench"
+   ]
+  },
+  {
+   "image": "1167669558_87a8a467d6.jpg",
+   "greedy": "man in blue shirt and glasses is holding drink",
+   "beam3": "man in blue shirt with his hand in his hand",
+   "refs": [
+    "man in yellow grimaces",
+    "man wearing yellow shirt with dramatic look on his face"
+   ]
+  },
+  {
+   "image": "2847615962_c330bded6e.jpg",
+   "greedy": "two dogs are running through the grass",
+   "beam3": "two dogs are running through the grass",
+   "refs": [
+    "dog lays on mattress on the porch",
+    "dog rolls on mattress placed on porch and scratches his back"
+   ]
+  },
+  {
+   "image": "3344233740_c010378da7.jpg",
+   "greedy": "man in black shirt is standing in front of crowd of people",
+   "beam3": "man in black shirt is standing in front of crowd of people",
+   "refs": [
+    "man is standing on sidewalk in the background with blurry image of another man in the foreground",
+    "man stands at busy bus stop"
+   ]
+  },
+  {
+   "image": "2435685480_a79d42e564.jpg",
+   "greedy": "man in green hat and backpack is standing on the side of mountain",
+   "beam3": "man with backpack stands in front of waterfall",
+   "refs": [
+    "girl wearing brown cap red sneakers and dark green coat sits on rock bench",
+    "hiker in jacket and knit cap sits with backpack on atop stone with cloudy sky in the background"
+   ]
+  }
+ ],
+ "distinct_captions_beam": 789,
+ "avg_len_beam": 8.791
+}

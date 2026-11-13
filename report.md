@@ -3,8 +3,9 @@
 | Field | Details |
 |---|---|
 | Name | Sanskriti Parakh |
-| Registration number | 23FE10ITE000298 |
+| Registration number | 23FE10ITE00298 |
 | Course | Deep Learning – Case Study |
+| Assigned case study | Case Study 9: Image Caption Generation (CNN + LSTM encoder–decoder, Flickr8k) |
 | Section | B |
 | Programme | B.Tech CSE |
 | Department | Information Technology |
@@ -18,7 +19,7 @@ Image captioning is the task of generating a short natural-language description 
 The goals are to (1) train a CNN + LSTM captioner, (2) compare two CNN encoders (InceptionV3 and ResNet50), (3) compare greedy decoding with beam search, (4) measure all of this against a simple retrieval baseline that writes nothing new, and (5) report scores with the BLEU metric on the official test split so they can be compared with published work. The best model is **ResNet50 with beam search**: BLEU-1/2/3/4 = **0.538 / 0.357 / 0.232 / 0.141**.
 
 ## 2. Dataset Description
-- **Source:** the official Flickr8k release (`Flickr8k_Dataset.zip` and `Flickr8k_text.zip` from github.com/jbrownlee/Datasets). The Kaggle fallback was not needed.
+- **Source:** the assignment points to the Kaggle copy of Flickr8k (kaggle.com/datasets/adityajn105/flickr8k). Instead we downloaded the original **official Flickr8k release** (`Flickr8k_Dataset.zip` and `Flickr8k_text.zip` from github.com/jbrownlee/Datasets), because it includes the official split files. The Kaggle copy would only have been needed as a fallback.
 - **Content:** colour photographs of everyday scenes, mostly people and dogs doing activities outdoors. Each image has **5 human-written captions**, stored in `Flickr8k.token.txt`. The release contains slightly more than 8,000 images (8,092 have captions listed), but only the **8,000 images named in the official split files** are used, with their 40,000 captions.
 - **Split:** the **official split** from `Flickr_8k.trainImages.txt`, `Flickr_8k.devImages.txt` and `Flickr_8k.testImages.txt`: **6,000 train / 1,000 dev / 1,000 test** images. Using the official split keeps results comparable with published work. The dev set is used only for early stopping; the test set is used only for the final scores.
 - **Characteristics:** captions are short (about 9.2 words on average after cleaning) and use a small vocabulary. In the training captions "dog(s)" appears in about 24% and "man" in about 17%, against only about 8% for "woman". There are almost no close-up portraits or selfies, which limits how well the model generalises to other kinds of photos.
@@ -44,6 +45,26 @@ The model has an image branch and a text branch whose outputs are added together
 | Merge and output | Add the two 256-d vectors → Dense(256, ReLU) → Dense(vocabulary, softmax) |
 | Size | 2.41 million trainable parameters (the encoder is not counted, as it is frozen) |
 
+![Figure 1. Architecture of the CNN + LSTM captioning model (merge design).](figures/architecture.png)
+
+**Model summary** (Keras `model.summary()`, vocabulary of 2,527 tokens, maximum prefix length 34):
+
+```
+Layer (type)          Output Shape        Param #   Connected to
+prefix (InputLayer)   (None, 34)                0   -
+image_features        (None, 2048)              0   -
+embedding             (None, 34, 256)     646,912   prefix
+dropout               (None, 2048)              0   image_features
+dropout_1             (None, 34, 256)           0   embedding
+dense                 (None, 256)         524,544   dropout
+lstm                  (None, 256)         525,312   dropout_1 (masked)
+add                   (None, 256)               0   dense, lstm
+dense_1               (None, 256)          65,792   add
+dense_2 (softmax)     (None, 2527)        649,439   dense_1
+
+Total params: 2,411,999 (9.20 MB)   Trainable: 2,411,999   Non-trainable: 0
+```
+
 **Decoding.** At inference the model starts from `startseq` and predicts one word at a time. Two strategies are used: **greedy** (always take the most likely word) and **beam search** (keep the 3 best partial sentences at each step, with length-normalised scoring). Beam search is vectorised over all images at once, so decoding the 1,000 test images takes about 30 seconds.
 
 **Baselines (no caption generation).** Using cosine similarity on the same CNN features: **NN-1** returns the first caption of the most similar training image; **kNN-5 consensus** pools the captions of the 5 most similar training images and returns the one that agrees most with the others.
@@ -65,6 +86,14 @@ The model has an image branch and a text branch whose outputs are added together
 Each configuration was trained once. Training loss kept falling, but dev loss was lowest at epoch 6 for InceptionV3 (3.228) and epoch 5 for ResNet50 (3.291), after which the models began to overfit. Early stopping restored the best weights.
 
 ## 6. Results and Discussion
+**Training and validation curves**
+
+![Figure 2. Training and validation loss per epoch. The dotted line marks the epoch with the lowest validation loss, whose weights were kept.](figures/loss_curves.png)
+
+Training loss falls steadily while validation loss flattens after epoch 3 and starts to rise after epoch 5–6. The widening gap shows overfitting, which is why early stopping on validation loss was used.
+
+**Evaluation metric.** A confusion matrix applies to classification tasks. Captioning is sentence generation, so the domain-specific metric is **BLEU-1 to BLEU-4** against the 5 human reference captions (the standard for Flickr8k), supported by the baseline comparison and sample captions below.
+
 **Test-set scores (1,000 images)**
 
 | Encoder | Method | BLEU-1 | BLEU-2 | BLEU-3 | BLEU-4 |
@@ -82,6 +111,8 @@ Each configuration was trained once. Training loss kept falling, but dev loss wa
 |---|---|---|
 | Distinct beam captions / 1000 | 789 | 815 |
 | Mean beam caption length (words) | 8.8 | 8.6 |
+
+![Figure 3. BLEU-1 to BLEU-4 on the test set for the two retrieval baselines and the LSTM model (greedy and beam search), for both encoders.](figures/bleu_comparison.png)
 
 **Observations**
 - The generative model clearly beats retrieval. Beam search with ResNet50 raises BLEU-4 from 0.091 (best baseline) to 0.141, a 55% relative gain.
@@ -117,12 +148,25 @@ The captions are fluent and get the scene type right (snow, pool, dancing, sitti
 - BLEU alone is a coarse measure. METEOR, CIDEr or SPICE would give a fuller picture.
 - The encoder is frozen and training was CPU-only. Fine-tuning the encoder, or using a larger dataset such as Flickr30k, could improve results.
 
+## Assignment checklist coverage
+| Required item (assignment brief) | Where it is covered |
+|---|---|
+| Project title, student name, roll number, assigned case study | Title and details table on page 1 |
+| Dataset source, description and preprocessing | Sections 2 and 3 |
+| Architecture diagram and model summary | Section 4 (Figure 1 and the model summary) |
+| Complete executable source code | `cap.py` (pipeline), `make_figures.py`, `app.py` (demo); see "How to reproduce" |
+| Training and validation loss graphs | Section 6, Figure 2 |
+| Final test results and domain-specific evaluation | Section 6 (BLEU-1 to 4 table, Figure 3, sample captions). A confusion matrix does not apply to caption generation. |
+| Baseline comparison and limitations | Section 6 (retrieval baselines; "Limitations and next steps") |
+
 ## How to reproduce
 ```bash
+python cap.py download                      # fetches the official Flickr8k release
 python cap.py features --enc inception      # and --enc resnet50
 python cap.py train    --enc inception --epochs 8 --batch 512
 python cap.py baseline --enc inception
 python cap.py eval     --enc inception
+python make_figures.py                      # loss curves, architecture diagram, BLEU chart
 streamlit run app.py
 ```
 The dataset goes in `data/images/Flicker8k_Dataset/` and `data/text/`. Outputs (features, models, vocabularies, training histories, `eval_*.json`, `baseline_*.json`) are written to `outputs/`.
